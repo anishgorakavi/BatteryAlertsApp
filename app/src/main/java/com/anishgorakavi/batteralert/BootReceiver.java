@@ -9,10 +9,9 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            // Register battery receiver on boot
-            Intent batteryIntent = new Intent(context, BatteryReceiver.class);
-            context.sendBroadcast(batteryIntent);
+            // Start BatteryService on boot
+            Intent serviceIntent = new Intent(context, BatteryService.class);
+            context.startForegroundService(serviceIntent);
         }
     }
 }
-
