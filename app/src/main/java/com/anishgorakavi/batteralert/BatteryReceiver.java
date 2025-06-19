@@ -35,6 +35,7 @@ public class BatteryReceiver extends BroadcastReceiver {
             System.out.println("Threshold: " + prefs.getInt("threshold", 20));
             System.out.println("Battery Last Level: " + lastLevel);
             System.out.println("Battery level: " + percent + "%");
+            System.out.println("Is charging: " + isCharging);
             int threshold = prefs.getInt("threshold", 20);
 
             if ( percent <= threshold && !isCharging && (lastLevel == 0 || lastLevel - percent >= 5) ) {

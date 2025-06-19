@@ -29,7 +29,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Start BatteryService to ensure monitoring is active
         Intent serviceIntent = new Intent(this, BatteryService.class);
-        startForegroundService(serviceIntent);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
 
         // UI for threshold
         SeekBar seekBar = findViewById(R.id.thresholdSeekBar);
