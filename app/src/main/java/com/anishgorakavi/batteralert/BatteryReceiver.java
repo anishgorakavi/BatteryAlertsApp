@@ -32,12 +32,15 @@ public class BatteryReceiver extends BroadcastReceiver {
 
             SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
             int lastLevel = prefs.getInt(LAST_LEVEL, -1);
+            System.out.println("Battery Last Level: " + lastLevel);
+            System.out.println("Battery level: " + percent + "%");
             int threshold = prefs.getInt("threshold", 20);
 
-            if (!isCharging && lastLevel != -1 && lastLevel - percent >= 5 && percent <= threshold) {
+            if ( percent <= threshold && !isCharging && (lastLevel == 0 || lastLevel - percent >= 5) ) {
+                System.out.println("Battery level dropped to " + percent + "%, sending notification.");
                 sendNotification(context, percent);
                 prefs.edit().putInt(LAST_LEVEL, percent).apply();
-            } else if (lastLevel == -1 || isCharging) {
+            } else if (lastLevel == 0 || isCharging) {
                 prefs.edit().putInt(LAST_LEVEL, percent).apply();
             }
         }
@@ -49,7 +52,7 @@ public class BatteryReceiver extends BroadcastReceiver {
             try {
                 String deviceName = Build.MODEL;
                 String message = "CRITICAL: Device " + deviceName + "'s Battery at " + percent + "%";
-                URL url = new URL("http://batteralerts.attlocal.net:80");
+                URL url = new URL("http://192.168.1.67/batteryalerts");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setDoOutput(true);
